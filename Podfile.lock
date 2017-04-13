@@ -1,0 +1,35 @@
+PODS:
+  - Alamofire (4.4.0)
+  - Kingfisher (3.6.1)
+  - ReactiveCocoa (5.0.2):
+    - ReactiveSwift (~> 1.1)
+  - ReactiveSwift (1.1.1):
+    - Result (~> 3.2)
+  - Realm (2.5.1):
+    - Realm/Headers (= 2.5.1)
+  - Realm/Headers (2.5.1)
+  - RealmSwift (2.5.1):
+    - Realm (= 2.5.1)
+  - Result (3.2.1)
+  - SwiftyJSON (3.1.4)
+
+DEPENDENCIES:
+  - Alamofire (~> 4.4)
+  - Kingfisher (~> 3.0)
+  - ReactiveCocoa (~> 5.0.0)
+  - RealmSwift
+  - SwiftyJSON
+
+SPEC CHECKSUMS:
+  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
+  Kingfisher: 2f31cb75f3e98d3d4c406cbdcd9b263e956cfa67
+  ReactiveCocoa: 17bc0968fd6c69c72dba8b272bc3c4700a0d3ea3
+  ReactiveSwift: 2489549e3231a6ff68ec99f3d320bb264f10ba0a
+  Realm: 32f86104d37c8521f864d4274050b38ba6190733
+  RealmSwift: f719e7511c902b8908593e8f143f59e47931bdb6
+  Result: 2453a22e5c5b11c0c3a478736e82cd02f763b781
+  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
+
+PODFILE CHECKSUM: b815d845d95db2b3ed4c744ad3a6b41ce05890cc
+
+COCOAPODS: 1.2.0
