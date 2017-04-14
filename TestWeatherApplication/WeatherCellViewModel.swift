@@ -1,10 +1,4 @@
-//
-//  WeatherCellViewModel.swift
-//  TestWeatherApplication
-//
-//  Created by Александр Смоленский on 12.04.17.
-//  Copyright © 2017 Alex. All rights reserved.
-//
+
 
 import Foundation
 import ReactiveSwift

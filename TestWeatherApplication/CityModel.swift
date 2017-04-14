@@ -1,10 +1,4 @@
-//
-//  CityModel.swift
-//  TestWeatherApplication
-//
-//  Created by Александр Смоленский on 10.04.17.
-//  Copyright © 2017 Alex. All rights reserved.
-//
+
 
 import Foundation
 import MapKit
@@ -24,8 +18,13 @@ class CityModel: ServerModelProtocol {
         self.country = countryName
         self.name = cityName
     }
-    
-    static func ==(left: CityModel, right: CityModel) -> Bool {
-        return left.name == right.name && left.country == right.country
+}
+
+extension CityModel: Hashable {
+    var hashValue: Int {
+        return "\(name)\(country)".hashValue
+    }
+    static func ==(lhs: CityModel, rhs: CityModel) -> Bool {
+        return lhs.name == rhs.name && lhs.country == rhs.country
     }
 }

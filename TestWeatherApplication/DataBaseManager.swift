@@ -1,10 +1,4 @@
-//
-//  DataBaseManager.swift
-//  TestWeatherApplication
-//
-//  Created by Александр Смоленский on 10.04.17.
-//  Copyright © 2017 Alex. All rights reserved.
-//
+
 
 import Foundation
 import ReactiveSwift
@@ -16,16 +10,14 @@ class DataBaseManager {
     static let shared = DataBaseManager()
     private init() {}
     
-    func isDuplicate(city: CityModel) -> Bool {
+    func isSuchRecord<T: Hashable>(_ model: T, forEntityType type: Object.Type) -> Bool {
         let realm = try! Realm()
-
+        
         if realm.isEmpty {
             return false
         }
-        
-        let places = realm.objects(Place.self).filter("countryName == %@ AND cityName == %@", city.country, city.name)
-        
-        return places.count > 0
+        let place = realm.object(ofType: type, forPrimaryKey: model.hashValue)
+        return place != nil
     }
     
     func updatePlace(_ place: Place, withNewCurrentWeather currentWeatherModel: CurrentWeatherModel, newPhoto photoModel: PhotoModel, andForecastData forecastModel: [ForecastWeatherModel]) {

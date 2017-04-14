@@ -1,10 +1,3 @@
-//
-//  TestWeatherApplicationTests.swift
-//  TestWeatherApplicationTests
-//
-//  Created by Александр Смоленский on 10.04.17.
-//  Copyright © 2017 Alex. All rights reserved.
-//
 
 import XCTest
 @testable import TestWeatherApplication

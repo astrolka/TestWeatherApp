@@ -1,10 +1,4 @@
-//
-//  ViewModelManager.swift
-//  TestWeatherApplication
-//
-//  Created by Александр Смоленский on 10.04.17.
-//  Copyright © 2017 Alex. All rights reserved.
-//
+
 
 import Foundation
 import ReactiveSwift
@@ -15,13 +9,10 @@ class ViewModelManager {
     static let shared = ViewModelManager()
     private init() {}
     
-    func placeChangedSignal() -> Signal<CityModel?, NoError> {
+    func placeChangedSignal() -> Signal<CityModel, NoError> {
         let signal = LocationManager.shared.getLocationSignal()
         
         return signal.skipRepeats { (oldCity, newCity) -> Bool in
-            guard let oldCity = oldCity, let newCity = newCity else {
-                return true
-            }
             return oldCity == newCity
         }
         
@@ -29,7 +20,7 @@ class ViewModelManager {
     
     func isValidNew(city: CityModel?) -> Bool {
         if let city = city {
-            return !DataBaseManager.shared.isDuplicate(city: city)
+            return !DataBaseManager.shared.isSuchRecord(city, forEntityType: Place.self)
         } else {
             return false
         }
