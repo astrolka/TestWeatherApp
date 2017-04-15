@@ -16,8 +16,8 @@ class DataBaseManager {
         if realm.isEmpty {
             return false
         }
-        let place = realm.object(ofType: type, forPrimaryKey: model.hashValue)
-        return place != nil
+        let object = realm.object(ofType: type, forPrimaryKey: model.hashValue)
+        return object != nil
     }
     
     func updatePlace(_ place: Place, withNewCurrentWeather currentWeatherModel: CurrentWeatherModel, newPhoto photoModel: PhotoModel, andForecastData forecastModel: [ForecastWeatherModel]) {

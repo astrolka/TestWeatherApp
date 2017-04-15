@@ -25,6 +25,6 @@ extension CityModel: Hashable {
         return "\(name)\(country)".hashValue
     }
     static func ==(lhs: CityModel, rhs: CityModel) -> Bool {
-        return lhs.name == rhs.name && lhs.country == rhs.country
+        return lhs.hashValue == rhs.hashValue
     }
 }
