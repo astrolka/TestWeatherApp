@@ -6,8 +6,8 @@ import ReactiveSwift
 class AutocompleteViewController: UIViewController {
     
     var viewModel: AutocompleteViewModel!
-    @IBOutlet weak var textField: UITextField!
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet fileprivate weak var textField: UITextField!
+    @IBOutlet private weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -4,12 +4,18 @@ import Foundation
 
 class CityViewModel {
     
-    let location: String
+    var location: String
     let cityModel: CityModel
     
     init(model: CityModel) {
         cityModel = model
-        location = model.name + ", " + model.country
+        location = ""
+        if let cityName = model.name {
+            location.append(cityName)
+        }
+        if let countryName = model.country {
+            location.append(", \(countryName)")
+        }
     }
     
 }

@@ -17,7 +17,7 @@ class AutocompleteViewModel {
     }
     
     private let sourceViewModel: PageViewModel
-    private var searchSignalProducer: SignalProducer<ResultModels<CityModel>, NSError>?
+    private var searchSignalProducer: SignalProducer<ResultModels<CityModel>, WeatherAppError>?
     
     init(sourceViewModel: PageViewModel) {
         self.sourceViewModel = sourceViewModel
@@ -32,19 +32,20 @@ class AutocompleteViewModel {
     
     func setupTextFieldSignal() {
         _ = textSignal?.throttle(0.4, on: QueueScheduler.main).observeValues { [weak self] text in
-            if let text = text {
-                self?.searchSignalProducer = ViewModelManager.shared.getSugestionsForText(text)
-                self?.searchSignalProducer?.startWithResult { (result) in
-                    switch result {
-                    case .success(let resultModels):
-                        self?.cellViewModels = resultModels.results.map({ (cityModel) -> CityViewModel in
-                            return CityViewModel(model: cityModel)
-                        })
-                        self?.reloadTableView.value = true
-                    case .failure(let error):
-                        //show smth to user, in next version (:
-                        print(error)
-                    }
+            guard let text = text else {
+                return
+            }
+            self?.searchSignalProducer = ViewModelManager.shared.getSugestionsForText(text)
+            self?.searchSignalProducer?.startWithResult { (result) in
+                switch result {
+                case .success(let resultModels):
+                    self?.cellViewModels = resultModels.results.map({ (cityModel) -> CityViewModel in
+                        return CityViewModel(model: cityModel)
+                    })
+                    self?.reloadTableView.value = true
+                case .failure(let error):
+                    //show smth to user, in next version (:
+                    print(error)
                 }
             }
         }

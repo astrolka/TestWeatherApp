@@ -13,11 +13,9 @@ class CommonWeatherCellViewModel {
     let windSpeed = MutableProperty<String>("")
     
     fileprivate weak var model: CommonWeather?
-    fileprivate weak var placeViewModel: PlaceViewModel?
     
-    init(model: CommonWeather, placeViewModel: PlaceViewModel) {
+    init(model: CommonWeather) {
         self.model = model
-        self.placeViewModel = placeViewModel
     }
     
     func updateViewModel(model: CommonWeather) {
@@ -38,10 +36,10 @@ class CurrentWeatherCellViewModel: CommonWeatherCellViewModel {
     let city: String
     let country: String
     
-    init(model: Place, placeViewModel: PlaceViewModel) {
+    init(model: Place) {
         city = model.cityName
         country = model.countryName
-        super.init(model: model.currentWeather!, placeViewModel: placeViewModel)
+        super.init(model: model.currentWeather!)
         updateViewModel(model: model.currentWeather!)
     }
     
@@ -64,8 +62,8 @@ class ForecastCellViewModel: CommonWeatherCellViewModel {
     let time = MutableProperty<String>("")
     
     
-    init(model: ForecastWeather, placeViewModel: PlaceViewModel) {
-        super.init(model: model, placeViewModel: placeViewModel)
+    init(model: ForecastWeather) {
+        super.init(model: model)
         updateViewModel(model: model)
     }
     

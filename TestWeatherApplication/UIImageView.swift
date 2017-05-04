@@ -1,5 +1,4 @@
 
-import Foundation
 import ReactiveSwift
 import Kingfisher
 import UIKit

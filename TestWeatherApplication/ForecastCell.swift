@@ -9,19 +9,14 @@ class ForecastCell: UITableViewCell {
     
     private weak var viewModel: ForecastCellViewModel!
     
-    @IBOutlet weak var date: UILabel!
-    @IBOutlet weak var time: UILabel!
-    @IBOutlet weak var temperature: UILabel!
-    @IBOutlet weak var icon: UIImageView!
-    @IBOutlet weak var info: UILabel!
-    @IBOutlet weak var pressure: UILabel!
-    @IBOutlet weak var humidity: UILabel!
-    @IBOutlet weak var windSpeed: UILabel!
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-    }
+    @IBOutlet private weak var date: UILabel!
+    @IBOutlet private weak var time: UILabel!
+    @IBOutlet private weak var temperature: UILabel!
+    @IBOutlet private weak var icon: UIImageView!
+    @IBOutlet private weak var info: UILabel!
+    @IBOutlet private weak var pressure: UILabel!
+    @IBOutlet private weak var humidity: UILabel!
+    @IBOutlet private weak var windSpeed: UILabel!
     
     func bindViewModel(_ viewModel: ForecastCellViewModel) {
         self.viewModel = viewModel
@@ -33,10 +28,6 @@ class ForecastCell: UITableViewCell {
         humidity.reactive.text <~ viewModel.humidity
         windSpeed.reactive.text <~ viewModel.windSpeed
         icon.reactive.url <~ viewModel.iconUrl
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
     }
 
 }

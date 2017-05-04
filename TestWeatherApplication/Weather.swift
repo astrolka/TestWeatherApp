@@ -12,12 +12,12 @@ class CommonWeather: Object {
     dynamic var info: String = ""
 
     fileprivate func bindServerModel(_ model: CommonWeatherModel) {
-        self.temperature = model.temperature
-        self.pressure = model.pressure
-        self.humidity = model.humidity
-        self.windSpeed = model.windSpeed
-        self.icon = model.icon
-        self.info = model.info
+        self.temperature = model.temperature ?? 0
+        self.pressure = model.pressure ?? 0
+        self.humidity = model.humidity ?? 0
+        self.windSpeed = model.windSpeed ?? 0
+        self.icon = model.icon ?? ""
+        self.info = model.info ?? ""
     }
 }
 
@@ -25,7 +25,7 @@ class CurrentWeather: CommonWeather {
     dynamic var visibility: Int = 0
     
     func bindServerModel(_ model: CurrentWeatherModel) {
-        self.visibility = model.visibility
+        self.visibility = model.visibility ?? 0
         super.bindServerModel(model)
     }
     
@@ -35,7 +35,7 @@ class ForecastWeather: CommonWeather {
     dynamic var dateInterval: Int = 0
     
     func bindServerModel(_ model: ForecastWeatherModel) {
-        self.dateInterval = model.dateInterval
+        self.dateInterval = model.dateInterval ?? 0
         super.bindServerModel(model)
     }
     

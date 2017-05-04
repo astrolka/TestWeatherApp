@@ -17,8 +17,11 @@ class Place: Object {
     }
 
     func bindCityModel(_ city: CityModel) {
-        self.cityName = city.name
-        self.countryName = city.country
+        guard let cityName = city.name, let countryName = city.country else {
+            return
+        }
+        self.cityName = cityName
+        self.countryName = countryName
         self.id = "\(city.name)\(city.country)".hashValue
     }
 }

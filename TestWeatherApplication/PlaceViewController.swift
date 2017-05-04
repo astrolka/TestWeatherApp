@@ -7,13 +7,29 @@ import ReactiveCocoa
 
 class PlaceViewController: UIViewController {
     
-    fileprivate var viewModel: PlaceViewModel!
+    var viewModel: PlaceViewModel!
 
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var refreshButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        bindViewModel()
+        setupViews()
+    }
+    
+    private func bindViewModel() {
+        tableView.reactive.insert <~ viewModel.insert
+        tableView.reactive.delete <~ viewModel.delete
+        tableView.reactive.update <~ viewModel.update
+        
+        UIApplication.shared.reactive.isNetworkIndicatorVisible <~ viewModel.isLoading
+        
+        refreshButton.reactive.pressed = CocoaAction(viewModel.refresh)
+    }
+    
+    private func setupViews() {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 60
         tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0)
@@ -22,38 +38,6 @@ class PlaceViewController: UIViewController {
         imageView.reactive.url <~ viewModel.imgUrl
         imageView.contentMode = .scaleAspectFill
         tableView.backgroundView = imageView
-    }
-    
-    func bindViewModel(_ viewModel: PlaceViewModel) {
-        self.viewModel = viewModel
-        
-        viewModel.insertSignal
-            .filter({ [weak self] (indexPaths) -> Bool in
-                return indexPaths.count > 0 && self?.tableView != nil
-            })
-            .observeValues { [weak self] (indexPaths) in
-                self?.tableView.beginUpdates()
-                self?.tableView.insertRows(at: indexPaths, with: .left)
-                self?.tableView.endUpdates()
-        }
-        viewModel.deleteSignal
-            .filter({ [weak self] (indexPaths) -> Bool in
-                return indexPaths.count > 0 && self?.tableView != nil
-            })
-            .observeValues { [weak self] (indexPaths) in
-                self?.tableView.beginUpdates()
-                self?.tableView.deleteRows(at: indexPaths, with: .right)
-                self?.tableView.endUpdates()
-        }
-        viewModel.reloadSignal
-            .filter({ [weak self] (indexPaths) -> Bool in
-                return indexPaths.count > 0 && self?.tableView != nil
-            })
-            .observeValues { [weak self] (indexPaths) in
-                self?.tableView.beginUpdates()
-                self?.tableView.reloadRows(at: indexPaths, with: .fade)
-                self?.tableView.endUpdates()
-        }
     }
     
     @IBAction func moreAction(_ sender: UIButton) {
@@ -74,10 +58,10 @@ class PlaceViewController: UIViewController {
         alertController.addAction(cancelAction)
         present(alertController, animated: true, completion: nil)
     }
-    
-    @IBAction func refreshAction(_ sender: UIButton) {
-        viewModel.refreshObserver.send(value: nil)
-    }
+//    
+//    @IBAction func refreshAction(_ sender: UIButton) {
+//        viewModel.refreshObserver.send(value: nil)
+//    }
     
     
 }
@@ -95,11 +79,11 @@ extension PlaceViewController: UITableViewDataSource {
         let vm = viewModel.cellViewModelFor(indexPath: indexPath)
         switch vm {
         case is CurrentWeatherCellViewModel:
-            let currentWeatherCell = tableView.dequeueReusableCell(withIdentifier: "CurrentWeatherCell", for: indexPath) as! CurrentWeatherCell
+            let currentWeatherCell = tableView.dequeueReusableCell(withIdentifier: CurentWeatherCellId, for: indexPath) as! CurrentWeatherCell
             currentWeatherCell.bindViewModel(vm as! CurrentWeatherCellViewModel)
             return currentWeatherCell
         case is ForecastCellViewModel:
-            let forecastWeatherCell = tableView.dequeueReusableCell(withIdentifier: "ForecastCell", for: indexPath) as! ForecastCell
+            let forecastWeatherCell = tableView.dequeueReusableCell(withIdentifier: ForecastWeatherCellId, for: indexPath) as! ForecastCell
             forecastWeatherCell.bindViewModel(vm as! ForecastCellViewModel)
             return forecastWeatherCell
         default:

@@ -9,15 +9,19 @@ class DataBaseManager {
     
     static let shared = DataBaseManager()
     private init() {}
-    
-    func isSuchRecord<T: Hashable>(_ model: T, forEntityType type: Object.Type) -> Bool {
-        let realm = try! Realm()
         
-        if realm.isEmpty {
+    func isSuchRecord<T: Hashable>(_ model: T, forEntityType type: Object.Type) -> Bool {
+        do {
+            let realm = try Realm()
+            if realm.isEmpty {
+                return false
+            }
+            let object = realm.object(ofType: type, forPrimaryKey: model.hashValue)
+            return object != nil
+        } catch let error {
+            print(error)
             return false
         }
-        let object = realm.object(ofType: type, forPrimaryKey: model.hashValue)
-        return object != nil
     }
     
     func updatePlace(_ place: Place, withNewCurrentWeather currentWeatherModel: CurrentWeatherModel, newPhoto photoModel: PhotoModel, andForecastData forecastModel: [ForecastWeatherModel]) {

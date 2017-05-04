@@ -1,18 +1,25 @@
 
-
 import Foundation
 
-class ResultModels<T: ServerModelProtocol> {
-    let results: [T]
-    
-    init(response: [[String : Any]]) {
-        results = response.map({ (dict) -> T in
-            return T(dict)
-        })
-    }
-    
+let CurentWeatherCellId = "CurrentWeatherCell"
+let ForecastWeatherCellId = "ForecastCell"
+let PlaceViewControllerIdentifier = "PlaceViewController"
+
+protocol WeatherAppErrorProtocol: Error {
+    var localizedTitle: String { get }
+    var localizedDescription: String { get }
+    var code: Int { get }
 }
 
-protocol ServerModelProtocol {
-    init(_ response: [String : Any])
+class WeatherAppError: WeatherAppErrorProtocol {
+    
+    var localizedTitle: String
+    var localizedDescription: String
+    var code: Int
+    
+    init(localizedTitle: String?, localizedDescription: String, code: Int) {
+        self.localizedTitle = localizedTitle ?? "Error"
+        self.localizedDescription = localizedDescription
+        self.code = code
+    }
 }

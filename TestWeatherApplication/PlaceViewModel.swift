@@ -6,21 +6,26 @@ import ReactiveSwift
 import ReactiveCocoa
 import Result
 
-enum Action {
-    case Delete, AddNew
-}
-
 class PlaceViewModel {
     
     //MARK: - Properties
-    
-    let (insertSignal, insertObserver) = Signal<[IndexPath], NoError>.pipe()
-    let (deleteSignal, deleteObserver) = Signal<[IndexPath], NoError>.pipe()
-    let (reloadSignal, reloadObserver) = Signal<[IndexPath], NoError>.pipe()
-    let (refreshSignal, refreshObserver) = Signal<Any?, NoError>.pipe()
+
     let imgUrl = MutableProperty<URL?>(nil)
     
+    let insert = MutableProperty<[IndexPath]>([IndexPath]())
+    let delete = MutableProperty<[IndexPath]>([IndexPath]())
+    let update = MutableProperty<[IndexPath]>([IndexPath]())
     
+    let isLoading = MutableProperty(false)
+    
+    var refresh: Action<Void, Void, NoError> {
+        let enabled = isLoading.negate()
+        return Action<Void, Void, NoError>(enabledIf: enabled) { _ in
+            return SignalProducer<Void, NoError> { [weak self] observer, _ in
+                self?.performRefresh(observer: observer)
+            }
+        }
+    }
     
     private let place: Place
     private weak var pageViewModel: PageViewModel?
@@ -37,14 +42,7 @@ class PlaceViewModel {
         setupCellViewModels()
         setupPlaceNotifications()
         setupForecastNotifications()
-        setupObservers()
-        performRefresh()
-    }
-    
-    private func setupObservers() {
-        refreshSignal.observeValues { [weak self] (state) in
-            self?.performRefresh()
-        }
+        performRefresh(observer: nil)
     }
     
     private func setupPlaceNotifications() {
@@ -95,11 +93,11 @@ class PlaceViewModel {
     private func setupFirstSectionCells() {
         if place.currentWeather != nil {
             if currentWeatherViewModel != nil {
-                currentWeatherViewModel = CurrentWeatherCellViewModel(model: place, placeViewModel: self)
-                reloadObserver.send(value: [IndexPath(row: 0, section: 0)])
+                currentWeatherViewModel = CurrentWeatherCellViewModel(model: place)
+                update.value = [IndexPath(row: 0, section: 0)]
             } else {
-                currentWeatherViewModel = CurrentWeatherCellViewModel(model: place, placeViewModel: self)
-                insertObserver.send(value: [IndexPath(row: 0, section: 0)])
+                currentWeatherViewModel = CurrentWeatherCellViewModel(model: place)
+                insert.value = [IndexPath(row: 0, section: 0)]
             }
             
         }
@@ -108,7 +106,7 @@ class PlaceViewModel {
     private func setupCellViewModels() {
         setupFirstSectionCells()
         for forecastModel in place.forecast {
-            let forecastCellViewModel = ForecastCellViewModel(model: forecastModel, placeViewModel: self)
+            let forecastCellViewModel = ForecastCellViewModel(model: forecastModel)
             forecastViewModels.append(forecastCellViewModel)
         }
         setupPhoto()
@@ -121,7 +119,7 @@ class PlaceViewModel {
             }
         }
         for i in inserted {
-            let forecastCellViewModel = ForecastCellViewModel(model: place.forecast[i], placeViewModel: self)
+            let forecastCellViewModel = ForecastCellViewModel(model: place.forecast[i])
             if i < forecastViewModels.count {
                 forecastViewModels.insert(forecastCellViewModel, at: i)
             } else {
@@ -135,9 +133,10 @@ class PlaceViewModel {
                 forecastViewModels.remove(at: i)
             }
         }
-        insertObserver.send(value: makeIndexPathsFromIndexes(inserted))
-        deleteObserver.send(value: makeIndexPathsFromIndexes(deleted))
-        reloadObserver.send(value: makeIndexPathsFromIndexes(reloaded))
+        
+        insert.value = makeIndexPathsFromIndexes(inserted)
+        delete.value = makeIndexPathsFromIndexes(deleted)
+        update.value = makeIndexPathsFromIndexes(reloaded)
     }
     
     private func makeIndexPathsFromIndexes(_ indexes: [Int]) -> [IndexPath] {
@@ -146,14 +145,22 @@ class PlaceViewModel {
         })
     }
     
-    private func performRefresh() {
-        ViewModelManager.shared.updateDataForPlace(place).startWithResult { (result) in
-            switch result {
-            case .success: break
-            //stop activity indicator
-            case .failure(let error):
-                //show overlay
-                print(error)
+    private func performRefresh(observer: Observer<Void, NoError>?) {
+        isLoading.value = true
+        let loadSongsSignalProducer = ViewModelManager.shared
+            .updateDataForPlace(place)
+            .on(starting: { [weak self] in
+                self?.isLoading.value = true
+                }, failed: { (error) in
+                    print(error)
+            }, terminated: { [weak self] in
+                self?.isLoading.value = false
+                observer?.sendCompleted()
+            })
+        
+        loadSongsSignalProducer.startWithResult { (result) in
+            if let error = result.error {
+                print(error.localizedDescription)
             }
         }
     }

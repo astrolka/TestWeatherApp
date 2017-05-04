@@ -8,6 +8,7 @@ class PageViewController: UIPageViewController {
     
     
     private var currentIndex = 0
+    fileprivate var transitionInProgress = false
     private var viewModel: PageViewModel!
     fileprivate var orderedViewControllers: [PlaceViewController]!
 
@@ -18,6 +19,7 @@ class PageViewController: UIPageViewController {
             setViewControllers([vc], direction: .forward, animated: true, completion: nil)
         }
         dataSource = self
+        delegate = self
         setNeedsStatusBarAppearanceUpdate()
     }
     
@@ -29,16 +31,24 @@ class PageViewController: UIPageViewController {
         self.viewModel = viewModel
         
         orderedViewControllers = viewModel.pageViewModels.map({ (placeViewModel) -> PlaceViewController in
-            let placeViewController = storyboard?.instantiateViewController(withIdentifier: "PlaceViewController") as! PlaceViewController
-            placeViewController.bindViewModel(placeViewModel)
-            return placeViewController
+            let vc = storyboard?.instantiateViewController(withIdentifier: PlaceViewControllerIdentifier) as! PlaceViewController
+            vc.viewModel = placeViewModel
+            return vc
         })
         
         viewModel.insertPlaceSignal.observeValues { [weak self] (placeViewModel) in
-            let vc = self?.storyboard?.instantiateViewController(withIdentifier: "PlaceViewController") as! PlaceViewController
-            vc.bindViewModel(placeViewModel)
+            if self?.transitionInProgress ?? true {
+                return
+            }
+            
+            self?.transitionInProgress = true
+            let vc = self?.storyboard?.instantiateViewController(withIdentifier: PlaceViewControllerIdentifier) as! PlaceViewController
+            vc.viewModel = placeViewModel
             self?.orderedViewControllers.append(vc)
-            self?.setViewControllers([vc], direction: .forward, animated: true, completion: nil)
+            self?.setViewControllers([vc], direction: .forward, animated: true) { (finished) in
+                self?.transitionInProgress = !finished
+            }
+            
             DispatchQueue.main.async {
                 self?.dataSource = nil
                 self?.dataSource = self
@@ -56,7 +66,7 @@ extension PageViewController: UIPageViewControllerDataSource {
             return nil
         }
         
-        if currentIndex == 0 {
+        if currentIndex == 0 || transitionInProgress {
             return nil
         }
         
@@ -69,12 +79,24 @@ extension PageViewController: UIPageViewControllerDataSource {
             return nil
         }
         
-        if currentIndex >= orderedViewControllers.count - 1 {
+        if currentIndex >= orderedViewControllers.count - 1 || transitionInProgress {
             return nil
         }
         return orderedViewControllers[currentIndex + 1]
     }
 }
+
+extension PageViewController: UIPageViewControllerDelegate {
+    
+    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+        transitionInProgress = true
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        transitionInProgress = !finished
+    }
+}
+
 
 
 

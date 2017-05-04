@@ -4,18 +4,19 @@ import Foundation
 import SwiftyJSON
 
 class PhotoModel {
-    let farm: Int
-    let id: Int
-    let server: Int
-    let secret: String
-    let owner: String
+    let farm: Int?
+    let id: String?
+    let server: String?
+    let secret: String?
+    let owner: String?
     
     init(dictionary: [String : Any]) {
         let jsonObject = JSON(dictionary)
-        self.farm = jsonObject["photos"]["photo"][0]["farm"].intValue
-        self.id = jsonObject["photos"]["photo"][0]["id"].intValue
-        self.server = jsonObject["photos"]["photo"][0]["server"].intValue
-        self.secret = jsonObject["photos"]["photo"][0]["secret"].stringValue
-        self.owner = jsonObject["photos"]["photo"][0]["owner"].stringValue
+        let firstPhoto = jsonObject["photos"]["photo"][0]
+        self.farm = firstPhoto["farm"].int
+        self.id = firstPhoto["id"].string
+        self.server = firstPhoto["server"].string
+        self.secret = firstPhoto["secret"].string
+        self.owner = firstPhoto["owner"].string
     }
 }
