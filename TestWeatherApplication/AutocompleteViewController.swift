@@ -36,7 +36,7 @@ extension AutocompleteViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let vm = viewModel.cellViewModelForIndexPath(indexPath)
-        let cell = tableView.dequeueReusableCell(withIdentifier: "AutocompleteCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: AutocompleteCellId, for: indexPath)
         cell.textLabel?.text = vm?.location
         return cell
     }

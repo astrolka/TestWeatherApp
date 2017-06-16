@@ -6,7 +6,7 @@ import ReactiveSwift
 
 class PageViewController: UIPageViewController {
     
-    
+    internal var u = ""
     private var currentIndex = 0
     fileprivate var transitionInProgress = false
     private var viewModel: PageViewModel!
@@ -14,7 +14,7 @@ class PageViewController: UIPageViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .blue
         if let vc = orderedViewControllers.first {
             setViewControllers([vc], direction: .forward, animated: true, completion: nil)
         }
@@ -30,29 +30,28 @@ class PageViewController: UIPageViewController {
     func bindViewModel(_ viewModel: PageViewModel) {
         self.viewModel = viewModel
         
-        orderedViewControllers = viewModel.pageViewModels.map({ (placeViewModel) -> PlaceViewController in
+        orderedViewControllers = viewModel.pageViewModels.map { (placeViewModel) -> PlaceViewController in
             let vc = storyboard?.instantiateViewController(withIdentifier: PlaceViewControllerIdentifier) as! PlaceViewController
             vc.viewModel = placeViewModel
             return vc
-        })
+        }
         
-        viewModel.insertPlaceSignal.observeValues { [weak self] (placeViewModel) in
-            if self?.transitionInProgress ?? true {
-                return
-            }
-            
-            self?.transitionInProgress = true
-            let vc = self?.storyboard?.instantiateViewController(withIdentifier: PlaceViewControllerIdentifier) as! PlaceViewController
-            vc.viewModel = placeViewModel
-            self?.orderedViewControllers.append(vc)
-            self?.setViewControllers([vc], direction: .forward, animated: true) { (finished) in
-                self?.transitionInProgress = !finished
-            }
-            
-            DispatchQueue.main.async {
-                self?.dataSource = nil
-                self?.dataSource = self
-            }
+        viewModel.insertPlaceSignal
+            .filter { [weak self] (_) -> Bool in
+            return !(self?.transitionInProgress ?? true)
+            }.observeValues { [weak self] (placeViewModel) in
+                self?.transitionInProgress = true
+                let vc = self?.storyboard?.instantiateViewController(withIdentifier: PlaceViewControllerIdentifier) as! PlaceViewController
+                vc.viewModel = placeViewModel
+                self?.orderedViewControllers.append(vc)
+                self?.setViewControllers([vc], direction: .forward, animated: true) { (finished) in
+                    self?.transitionInProgress = !finished
+                }
+                
+                DispatchQueue.main.async {
+                    self?.dataSource = nil
+                    self?.dataSource = self
+                }
         }
         
     }
@@ -62,7 +61,7 @@ class PageViewController: UIPageViewController {
 extension PageViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         
-        guard let currentIndex = orderedViewControllers.index(of: viewController as! PlaceViewController) else {
+        guard orderedViewControllers.count > 0, let currentIndex = orderedViewControllers.index(of: viewController as! PlaceViewController) else {
             return nil
         }
         
@@ -75,7 +74,7 @@ extension PageViewController: UIPageViewControllerDataSource {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         
-        guard let currentIndex = orderedViewControllers.index(of: viewController as! PlaceViewController) else {
+        guard orderedViewControllers.count > 0, let currentIndex = orderedViewControllers.index(of: viewController as! PlaceViewController) else {
             return nil
         }
         
@@ -96,8 +95,5 @@ extension PageViewController: UIPageViewControllerDelegate {
         transitionInProgress = !finished
     }
 }
-
-
-
 
 

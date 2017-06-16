@@ -32,7 +32,7 @@ class PlaceViewController: UIViewController {
     private func setupViews() {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 60
-        tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0)
+        tableView.contentInset = UIEdgeInsets(top: 64, left: 0, bottom: 0, right: 0)
         
         let imageView = UIImageView()
         imageView.reactive.url <~ viewModel.imgUrl
@@ -44,7 +44,7 @@ class PlaceViewController: UIViewController {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let addAction = UIAlertAction(title: "Add new location", style: .default) { [weak self] (action) in
             if let viewModel = self?.viewModel.viewModelForAutoCompleteView() {
-                let vc = self?.storyboard?.instantiateViewController(withIdentifier: "AutocompleteViewController") as! AutocompleteViewController
+                let vc = self?.storyboard?.instantiateViewController(withIdentifier: AutocompleteViewControllerIdentifier) as! AutocompleteViewController
                 vc.bindViewModel(viewModel)
                 self?.present(vc, animated: true, completion: nil)
             }
@@ -58,11 +58,6 @@ class PlaceViewController: UIViewController {
         alertController.addAction(cancelAction)
         present(alertController, animated: true, completion: nil)
     }
-//    
-//    @IBAction func refreshAction(_ sender: UIButton) {
-//        viewModel.refreshObserver.send(value: nil)
-//    }
-    
     
 }
 

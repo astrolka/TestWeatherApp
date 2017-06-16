@@ -15,13 +15,13 @@ class PageViewModel {
         })
         
         ViewModelManager.shared.placeChangedSignal()
-        .filter({ (cityModel) -> Bool in
-            return ViewModelManager.shared.isValidNew(city: cityModel)
-        }).observeValues { [weak self] (cityModel) in
-            let place = ViewModelManager.shared.placeForCityModel(cityModel)
-            if let weakSelf = self {
-                weakSelf.insertPlaceObserver.send(value: PlaceViewModel(place: place, pageViewModel: weakSelf))
-            }
+            .filter { (cityModel) -> Bool in
+                return ViewModelManager.shared.isValidNew(city: cityModel)
+            }.observeValues { [weak self] (cityModel) in
+                let place = ViewModelManager.shared.placeForCityModel(cityModel)
+                if let weakSelf = self {
+                    weakSelf.insertPlaceObserver.send(value: PlaceViewModel(place: place, pageViewModel: weakSelf))
+                }
         }
     }
 }

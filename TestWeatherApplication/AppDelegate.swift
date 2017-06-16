@@ -9,7 +9,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let pageVC = storyboard.instantiateViewController(withIdentifier: "PageViewController") as! PageViewController
+        let pageVC = storyboard.instantiateViewController(withIdentifier: PageViewControllerIdentifier) as! PageViewController
         let pageViewModel = PageViewModel()
         pageVC.bindViewModel(pageViewModel)
         

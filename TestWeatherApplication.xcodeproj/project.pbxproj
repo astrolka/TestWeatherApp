@@ -251,6 +251,57 @@
 			name = DBModels;
 			sourceTree = "<group>";
 		};
+		FABE593E1EF479D700B5BEFD /* PageViews */ = {
+			isa = PBXGroup;
+			children = (
+				FA6B102A1E9EAF14006ED496 /* PageViewController.swift */,
+			);
+			name = PageViews;
+			sourceTree = "<group>";
+		};
+		FABE593F1EF479ED00B5BEFD /* PlaceViews */ = {
+			isa = PBXGroup;
+			children = (
+				FA6B102C1E9EBD24006ED496 /* PlaceViewController.swift */,
+				FABE59401EF47A0700B5BEFD /* Cells */,
+			);
+			name = PlaceViews;
+			sourceTree = "<group>";
+		};
+		FABE59401EF47A0700B5BEFD /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				FA6B102E1E9EC2BA006ED496 /* CurrentWeatherCell.swift */,
+				FA6B10301E9EC2CE006ED496 /* ForecastCell.swift */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		FABE59411EF47A0F00B5BEFD /* AutocompleteViews */ = {
+			isa = PBXGroup;
+			children = (
+				FA6B10341E9FC43A006ED496 /* AutocompleteViewController.swift */,
+			);
+			name = AutocompleteViews;
+			sourceTree = "<group>";
+		};
+		FABE59421EF47A3200B5BEFD /* Page */ = {
+			isa = PBXGroup;
+			children = (
+				FAE3D54B1E9BE0AE00073795 /* PageViewModel.swift */,
+			);
+			name = Page;
+			sourceTree = "<group>";
+		};
+		FABE59431EF47A4300B5BEFD /* Place */ = {
+			isa = PBXGroup;
+			children = (
+				FAE3D5501E9E069000073795 /* PlaceViewModel.swift */,
+				FAE3D5571E9E213E00073795 /* WeatherCellViewModel.swift */,
+			);
+			name = Place;
+			sourceTree = "<group>";
+		};
 		FAE3D5461E9BDEA900073795 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -265,9 +316,8 @@
 		FAE3D54D1E9BE0BE00073795 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				FAE3D54B1E9BE0AE00073795 /* PageViewModel.swift */,
-				FAE3D5501E9E069000073795 /* PlaceViewModel.swift */,
-				FAE3D5571E9E213E00073795 /* WeatherCellViewModel.swift */,
+				FABE59421EF47A3200B5BEFD /* Page */,
+				FABE59431EF47A4300B5BEFD /* Place */,
 				FA6B103F1E9FDD8A006ED496 /* Autocomplete */,
 			);
 			name = ViewModels;
@@ -277,11 +327,9 @@
 			isa = PBXGroup;
 			children = (
 				FA7D5F471E9B772B00269EFF /* Main.storyboard */,
-				FA6B102A1E9EAF14006ED496 /* PageViewController.swift */,
-				FA6B102C1E9EBD24006ED496 /* PlaceViewController.swift */,
-				FA6B102E1E9EC2BA006ED496 /* CurrentWeatherCell.swift */,
-				FA6B10301E9EC2CE006ED496 /* ForecastCell.swift */,
-				FA6B10341E9FC43A006ED496 /* AutocompleteViewController.swift */,
+				FABE593E1EF479D700B5BEFD /* PageViews */,
+				FABE593F1EF479ED00B5BEFD /* PlaceViews */,
+				FABE59411EF47A0F00B5BEFD /* AutocompleteViews */,
 			);
 			name = Views;
 			sourceTree = "<group>";

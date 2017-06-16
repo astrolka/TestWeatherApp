@@ -3,7 +3,11 @@ import Foundation
 
 let CurentWeatherCellId = "CurrentWeatherCell"
 let ForecastWeatherCellId = "ForecastCell"
+let AutocompleteCellId = "AutocompleteCell"
+
 let PlaceViewControllerIdentifier = "PlaceViewController"
+let AutocompleteViewControllerIdentifier = "AutocompleteViewController"
+let PageViewControllerIdentifier = "PageViewController"
 
 protocol WeatherAppErrorProtocol: Error {
     var localizedTitle: String { get }
